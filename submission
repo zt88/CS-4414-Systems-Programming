@@ -1,0 +1,134 @@
+#include <iostream>
+#include <array>
+#include <cstring>
+#include <bits/stdc++.h>
+
+
+using namespace std;
+
+int main()
+{   
+    cout << "Please type your name: ";
+    
+    string name;
+    static array<int, 52> letterCounts;
+    static array<int, 26> lcLetterCounts;
+    const char delim = ' ';
+
+
+    while(getline(cin, name))
+    {   
+        if(name[0] == ' ')
+        {
+            return 0;
+        }
+
+        // split the name and add to string[]
+        int size = 0;
+        size = count(name.begin(), name.end(), ' ') + 1;
+
+        string temp;
+        stringstream ssname(name);
+        string split_name[size];
+        int index = 0; // index for split_name[]
+
+        while (getline(ssname, temp, delim))
+        {   
+            split_name[index] = temp;
+            ++index;
+        }
+
+
+        // record count of each letter
+        for(int i = 0; i < name.size(); ++i)
+        {
+            if(!isspace(name[i]))
+            {
+                int asic = name[i];
+
+                // capitalcase letters
+                if(65 <= asic && asic <= 90)
+                {
+                    asic -= 65;
+                    letterCounts.at(asic) = count(name.begin(), name.end(), name[i]);
+                }
+
+                // lowcase letters
+                else if(97 <= asic && asic <= 122)
+                {
+                    asic -= 71;
+                    letterCounts.at(asic) = count(name.begin(), name.end(), name[i]);
+                }
+            }
+        }
+
+
+        // convert user name to all lower case
+        string lowcase_name = name;
+
+        for(int i = 0; i < name.size(); ++i)
+        {
+            lowcase_name[i] = tolower(name[i]);
+        }
+
+
+        // all lower case name with count of each letter
+        for(int i = 0; i < lowcase_name.size(); ++i)
+        {
+            if(!isspace(lowcase_name[i]))
+            {
+                int asic = lowcase_name[i] - 97;
+                lcLetterCounts.at(asic) = count(lowcase_name.begin(), lowcase_name.end(), lowcase_name[i]);
+            }
+        }
+
+
+        /*
+        OUTPUT
+        */
+        cout << "Full user name: " << name << endl;
+        for(int i = 0; i < size; ++i)
+        {
+            if(split_name->at(i))
+            {
+                cout << "          Name " << i+1 << ": " << "\'" << split_name[i] << "\'" << endl;
+            }
+        }
+
+
+        cout << "Letter counts (upper case separate from lower case):" << endl;
+
+        for(int i = 0; i < letterCounts.size(); ++i)
+        {
+            if(letterCounts.at(i) != 0)
+            {
+                if(0 <= i && i <= 25)
+                {
+                    cout << "                              " << "'" << char(i + 65) << "'" << ":          " << letterCounts.at(i) << endl;
+                }
+
+                else if(i >= 26)
+                {
+                    cout << "                              " << "'" << char(i + 71) << "'" << ":          " << letterCounts.at(i) << endl;
+                }
+            }
+        }
+
+        cout << "Letter counts (with everything mapped to lower case):" << endl;
+        for(int i = 0; i < lcLetterCounts.size(); ++i)
+        {
+            if(lcLetterCounts.at(i) != 0)
+            {
+                cout << "                              " << "'" << char(i + 97) << "'" << ":          " << lcLetterCounts.at(i) << endl;
+            }
+        }
+
+        cout << "Please type your name: ";
+
+        fill(begin(letterCounts), end(letterCounts), 0);
+        fill(begin(lcLetterCounts), end(lcLetterCounts), 0);
+
+    }
+
+    return 0;
+}
